@@ -24,21 +24,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val tasks = DataSource.createTasksList()
-        val task = tasks[0]
-
-        val taskObservable: Observable<Task> = Observable
-                .just(task)
+        val taskObservable: Observable<Int> = Observable
+                .range(0, 9)
                 .subscribeOn(Schedulers.io())
                 .map {
                     Log.d(TAG, "inMap ${Thread.currentThread().name}")
-                    Log.d(TAG, "inMap ${it?.description}")
+                    Log.d(TAG, "inMap $it")
                     Thread.sleep(1000)
                     it
                 }
                 .observeOn(AndroidSchedulers.mainThread())
 
-        disposable.add(taskObservable.subscribe { t -> Log.d(TAG, "onNext: ${t?.description}") })
+        disposable.add(taskObservable.subscribe { t -> Log.d(TAG, "onNext: $t") })
 
     }
 
