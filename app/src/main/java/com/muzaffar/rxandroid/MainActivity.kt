@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.FlowableSubscriber
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Observer
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlin.math.log
+import org.reactivestreams.Subscription
 
 private const val TAG = "MainActivity_"
 
@@ -28,21 +28,23 @@ class MainActivity : AppCompatActivity() {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
 
-        taskObservable.subscribe(object : Observer<Task> {
+        val flowable = taskObservable.toFlowable(BackpressureStrategy.BUFFER)
+
+        flowable.subscribe(object : FlowableSubscriber<Task> {
             override fun onComplete() {
                 Log.d(TAG, "onComplete: called")
             }
 
-            override fun onSubscribe(d: Disposable?) {
-                Log.d(TAG, "onSubscribe: called")
+            override fun onSubscribe(s: Subscription?) {
+                Log.d(TAG, "onSubscribe: called --- $s")
             }
 
             override fun onNext(t: Task?) {
                 Log.d(TAG, "onNext: ${t?.description}")
             }
 
-            override fun onError(e: Throwable?) {
-                Log.d(TAG, "onError: $e")
+            override fun onError(t: Throwable?) {
+                Log.d(TAG, "onError: $t")
             }
 
         })
