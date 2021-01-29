@@ -25,11 +25,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val taskObservable: Observable<Long> = Observable
-                .timer(1, TimeUnit.SECONDS)
+        val taskObservable: Observable<Task> = Observable
+                .fromIterable(DataSource.createTasksList())
                 .subscribeOn(Schedulers.io())
                 .takeWhile{
-                    it < 5
+                    it.priority < 5
                 }
                 .observeOn(AndroidSchedulers.mainThread())
 
