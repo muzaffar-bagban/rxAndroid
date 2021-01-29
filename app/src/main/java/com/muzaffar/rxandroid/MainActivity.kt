@@ -12,6 +12,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import kotlin.math.log
 
 private const val TAG = "MainActivity_"
@@ -24,15 +25,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val taskObservable: Observable<Int> = Observable
-                .range(0, 9)
+        val taskObservable: Observable<Long> = Observable
+                .interval(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
-                .repeat(3)
-                .map {
-                    Log.d(TAG, "inMap ${Thread.currentThread().name}")
-                    Log.d(TAG, "inMap $it")
-                    Thread.sleep(1000)
-                    it * it
+                .takeWhile{
+                    it < 5
                 }
                 .observeOn(AndroidSchedulers.mainThread())
 
