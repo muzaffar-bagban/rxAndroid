@@ -28,16 +28,7 @@ class MainActivity : AppCompatActivity() {
         val task = tasks[0]
 
         val taskObservable: Observable<Task> = Observable
-                .create(object : ObservableOnSubscribe<Task> {
-                    override fun subscribe(emitter: ObservableEmitter<Task>?) {
-                        emitter?.let {
-                            if (!it.isDisposed) {
-                                it.onNext(task)
-                            }
-                        } ?: return
-
-                    }
-                })
+                .just(task)
                 .subscribeOn(Schedulers.io())
                 .map {
                     Log.d(TAG, "inMap ${Thread.currentThread().name}")
