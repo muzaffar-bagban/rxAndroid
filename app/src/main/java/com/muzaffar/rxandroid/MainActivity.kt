@@ -27,11 +27,12 @@ class MainActivity : AppCompatActivity() {
         val taskObservable: Observable<Int> = Observable
                 .range(0, 9)
                 .subscribeOn(Schedulers.io())
+                .repeat(3)
                 .map {
                     Log.d(TAG, "inMap ${Thread.currentThread().name}")
                     Log.d(TAG, "inMap $it")
                     Thread.sleep(1000)
-                    it
+                    it * it
                 }
                 .observeOn(AndroidSchedulers.mainThread())
 
