@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val taskObservable: Observable<Long> = Observable
-                .interval(1, TimeUnit.SECONDS)
+                .timer(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .takeWhile{
                     it < 5
