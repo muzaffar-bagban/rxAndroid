@@ -27,8 +27,11 @@ class MainActivity : AppCompatActivity() {
 
         val taskObservable: Observable<Task> = Observable
                 .fromIterable(DataSource.createTasksList())
+                .distinct {
+                    it.description
+                }
                 .subscribeOn(Schedulers.io())
-                .takeWhile{
+                .takeWhile {
                     it.priority < 5
                 }
                 .observeOn(AndroidSchedulers.mainThread())
