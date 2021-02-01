@@ -27,16 +27,13 @@ class MainActivity : AppCompatActivity() {
 
         val taskObservable: Observable<Task> = Observable
                 .fromIterable(DataSource.createTasksList())
-                .distinct {
-                    it.description
-                }
                 .subscribeOn(Schedulers.io())
                 .takeWhile {
                     it.priority < 5
                 }
                 .observeOn(AndroidSchedulers.mainThread())
 
-        disposable.add(taskObservable.subscribe { t -> Log.d(TAG, "onNext: $t") })
+        disposable.add(taskObservable.buffer(2).subscribe { t -> Log.d(TAG, "onNext: $t") })
 
     }
 
